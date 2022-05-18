@@ -1,0 +1,23 @@
+{
+  "name": "hicgmap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-css": "tailwindscss build src/styles.css -o public/styles.css" 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/walter-grace/hicg-manpbox.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/walter-grace/hicg-manpbox/issues"
+  },
+  "homepage": "https://github.com/walter-grace/hicg-manpbox#readme",
+  "dependencies": {
+    "tailwindscss": "^0.3.0"
+  }
+}
