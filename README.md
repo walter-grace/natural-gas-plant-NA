@@ -1,1 +1,1 @@
-# hicg-mapbox
+# hospital-maps
