@@ -1,1 +1,1 @@
-# hospital-maps
+# properitery hospital-maps
