@@ -1,207 +1,118 @@
-
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8"/>
-        <title>Properitery</title>
-
-        <!--Uber Font-->
-        <link rel="stylesheet" href="https://d1a3f4spazzrp4.cloudfront.net/kepler.gl/uber-fonts/4.0.0/superfine.css">
-
-        <!--MapBox css-->
-        <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.1/mapbox-gl.css" rel="stylesheet">
-
-        <!-- Load React/Redux -->
-        <script src="https://unpkg.com/react@16.8.4/umd/react.production.min.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@16.8.4/umd/react-dom.production.min.js" crossorigin></script>
-        <script src="https://unpkg.com/redux@3.7.2/dist/redux.js" crossorigin></script>
-        <script src="https://unpkg.com/react-redux@7.1.3/dist/react-redux.min.js" crossorigin></script>
-        <script src="https://unpkg.com/styled-components@4.1.3/dist/styled-components.min.js" crossorigin></script>
-
-        <!-- Load Kepler.gl -->
-        <script src="https://unpkg.com/kepler.gl@2.5.5/umd/keplergl.min.js" crossorigin></script>
-
-        <style type="text/css">
-          body {margin: 0; padding: 0; overflow: hidden;}
-        </style>
-
-        <!--MapBox token-->
-        <script>
-          /**
-           * Provide your MapBox Token
-           **/
-          const MAPBOX_TOKEN = 'pk.eyJ1Ijoid2FsdGdyYWNlIiwiYSI6ImNqdzh0NXI5djJ0YnM0YXFwYXhucGNyYmMifQ.tpIPhABvj5VhslWw2g3YaQ';
-          const WARNING_MESSAGE = 'Please Provide a Mapbox Token in order to use Kepler.gl. Edit this file and fill out MAPBOX_TOKEN with your access key';
-        </script>
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-
-        <!-- GA: Delete this as you wish, However to pat ourselves on the back, we only track anonymous pageview to understand how many people are using kepler.gl. -->
-
-      </head>
-      <body>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Swipe between maps</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.8.2/mapbox-gl.js"></script>
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 10; bottom: 0; width: 10%; }
+</style>
 </head>
-      <body class="text-blue-400 font-apple-system hover:bg-violet-600">
-      <header>
-        <div class="flex justify-center text-xl font-apple-system hover:bg-violet-600">
-          <img src="./img/proper.png" alt="logo">
-        </div>
-        <div>           
-          <h1 class="text-blue-700 flex justify-center text-2xl subpixel-antialiased font-bold">
-           A map that shows the population of each Hospital (Properitery) in the US
-          </h1>
-                <a class="flex justify-center font-apple-system text-xl " href="https://hospital-maps.vercel.app/">
-                  <button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-                    Non-profit Map
-                  </button>
-                </a>
-                <ul>
-                  <li>
-                    <a class="flex justify-center font-apple-system text-xl" href="https://properitery.vercel.app/">
-                      <button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-                        Proprietary
-                      </button>
-                    </a>
-                  </li>
-                  <li>
-                    <a class="flex justify-center font-apple-system text-xl" href="https://www.hicgrp.net/services/">
-                      <button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-                        Services
-                      </button>
-                    </a>
-                  </li>
-                  <li>
-                    <a class="flex justify-center font-apple-system text-xl" href="https://www.hicgrp.net/contact-us/">
-                      <button class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-                        Contact Us
-                      </button>
-                    </a>
-                  </li>
-                </ul>
-              </header>
-            </div>
-        <!-- We will put our React component inside this div. -->
-        <div id="app">
-          <!-- Kepler.gl map will be placed here-->
-        </div>
+<body>
+<style>
+    .overlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
 
-        <!-- Load our React component. -->
-        <script>
-          /* Validate Mapbox Token */
-          if ((MAPBOX_TOKEN || '') === '' || MAPBOX_TOKEN === 'PROVIDE_MAPBOX_TOKEN') {
-            alert(WARNING_MESSAGE);
-          }
+        }
+        
+        .overlay button {
+        font: 600 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        background-color: #3386c0;
+        color: #fff;
+        display: inline-block;
+        margin: 0;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 3px;
+        }
+        
+        .overlay button:hover {
+        background-color: #4ea0da;
+        }
+        .overlay2 {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        
+        }
+        
+        .overlay2 button {
+        font: 600 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        background-color: #3386c0;
+        color: #fff;
+        display: inline-block;
+        margin: 0;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 3px;
+        }
+        
+        .overlay2 button:hover {
+        background-color: #4ea0da;
+        }
 
-          /** STORE **/
-          const reducers = (function createReducers(redux, keplerGl) {
-            return redux.combineReducers({
-              // mount keplerGl reducer
-              keplerGl: keplerGl.keplerGlReducer.initialState({
-                uiState: {
-                  readOnly: true,
-                  currentModal: null
-                }
-              })
-            });
-          }(Redux, KeplerGl));
+    body {
+        overflow: hidden;
+    }
 
-          const middleWares = (function createMiddlewares(keplerGl) {
-            return keplerGl.enhanceReduxMiddleware([
-              // Add other middlewares here
-            ]);
-          }(KeplerGl));
+    body * {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
 
-          const enhancers = (function craeteEnhancers(redux, middles) {
-            return redux.applyMiddleware(...middles);
-          }(Redux, middleWares));
+    .map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css" type="text/css">
+<div id="comparison-container">
+    <div id="before" class="map"></div>
+    <div class="overlay">
+        <button id="compare-button">Federal Hospitals</button>
+    </div>
+    <div id="after" class="map"></div>
+    <div class="overlay2">
+        <button>Local/State Hospitals</button>
+    </div>
+</div>
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1Ijoid2FsdGdyYWNlIiwiYSI6ImNqdzVqYW5hajByMXI0OW1yYm5kaW9yM3gifQ.-v91cVoEIBzmedYTJfqcsw';
+    const beforeMap = new mapboxgl.Map({
+        container: 'before',
+        style: 'mapbox://styles/waltgrace/cl3kd97er000014pah795f59m',
+        center: [0, 0],
+        zoom: 0
+    });
 
-          const store = (function createStore(redux, enhancers) {
-            const initialState = {};
+    const afterMap = new mapboxgl.Map({
+        container: 'after',
+        style: 'mapbox://styles/waltgrace/cl3kclera000r16o2qafzi5vg',
+        center: [0, 0],
+        zoom: 0
+    });
 
-            return redux.createStore(
-              reducers,
-              initialState,
-              redux.compose(enhancers)
-            );
-          }(Redux, enhancers));
-          /** END STORE **/
+    // A selector or reference to HTML element
+    const container = '#comparison-container';
 
-          /** COMPONENTS **/
-          var KeplerElement = (function makeKeplerElement(react, keplerGl, mapboxToken) {
-            var LogoSvg = function LogoSvg() {
-              return react.createElement(
-                "div",
-                { },
-                );
-              };
+    const map = new mapboxgl.Compare(beforeMap, afterMap, container, {
+        // Set this to enable comparing two maps by mouse movement:
+        // mousemove: true
+    });
+</script>
 
-            return function App() {
-              var rootElm = react.useRef(null);
-              var _useState = react.useState({
-                width: window.innerWidth,
-                height: window.innerHeight
-              });
-              var windowDimension = _useState[0];
-              var setDimension = _useState[1];
-              react.useEffect(function sideEffect(){
-                function handleResize() {
-                  setDimension({width: window.innerWidth, height: window.innerHeight});
-                };
-                window.addEventListener('resize', handleResize);
-                return function() {window.removeEventListener('resize', handleResize);};
-              }, []);
-              return react.createElement(
-                'div',
-                {style: {position: 'absolute', left: 0, width: '100vw', height: '100vh'}},
-                LogoSvg(),
-                react.createElement(keplerGl.KeplerGl, {
-                  mapboxApiAccessToken: mapboxToken,
-                  id: "map",
-                  width: windowDimension.width,
-                  height: windowDimension.height
-                })
-              )
-            }
-          }(React, KeplerGl, MAPBOX_TOKEN));
-
-          const app = (function createReactReduxProvider(react, reactRedux, KeplerElement) {
-            return react.createElement(
-              reactRedux.Provider,
-              {store},
-              react.createElement(KeplerElement, null)
-            )
-          }(React, ReactRedux, KeplerElement));
-          /** END COMPONENTS **/
-
-          /** Render **/
-          (function render(react, reactDOM, app) {
-            reactDOM.render(app, document.getElementById('app'));
-          }(React, ReactDOM, app));
-        </script>
-        <!-- The next script will show how to interact directly with Kepler map store -->
-        <script>
-          /**
-           * Customize map.
-           * In the following section you can use the store object to dispatch Kepler.gl actions
-           * to add new data and customize behavior
-           */
-           (function customize(keplerGl, store) {
-            const datasets = [];
-            const config = {"version":"v1","config":{"visState":{"filters":[],"layers":[],"interactionConfig":{"tooltip":{"fieldsToShow":{},"compareMode":false,"compareType":"absolute","enabled":true},"brush":{"size":0.5,"enabled":false},"geocoder":{"enabled":false},"coordinate":{"enabled":false}},"layerBlending":"normal","splitMaps":[],"animationConfig":{"currentTime":null,"speed":1}},"mapState":{"bearing":0,"dragRotate":false,"latitude":37.75043,"longitude":-122.34679,"pitch":0,"zoom":9,"isSplit":false},"mapStyle":{"styleType":"7l2utn7","topLayerGroups":{},"visibleLayerGroups":{"label":true,"road":true,"building":true,"water":true},"threeDBuildingColor":[194.6103322548211,191.81688250953655,185.2988331038727],"mapStyles":{"7l2utn7":{"accessToken":"pk.eyJ1Ijoid2FsdGdyYWNlIiwiYSI6ImNqdzVqYW5hajByMXI0OW1yYm5kaW9yM3gifQ.-v91cVoEIBzmedYTJfqcsw","custom":true,"icon":"https://api.mapbox.com/styles/v1/waltgrace/cl3jajjr7001q15l46a310m9j/static/-122.3391,37.7922,9,0,0/400x300?access_token=pk.eyJ1Ijoid2FsdGdyYWNlIiwiYSI6ImNqdzVqYW5hajByMXI0OW1yYm5kaW9yM3gifQ.-v91cVoEIBzmedYTJfqcsw&logo=false&attribution=false","id":"7l2utn7","label":"properitery","url":"mapbox://styles/waltgrace/cl3jajjr7001q15l46a310m9j"}}}}};
-
-            const loadedData = keplerGl.KeplerGlSchema.load(
-              datasets,
-              config
-            );
-
-            store.dispatch(keplerGl.addDataToMap({
-              datasets: loadedData.datasets,
-              config: loadedData.config,
-              options: {
-                centerMap: false
-              }
-            }));
-          }(KeplerGl, store))
-        </script>
-      </body>
-    </html>
-  
+</body>
+</html>
